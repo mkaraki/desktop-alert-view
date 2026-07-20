@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Desktop Alert View</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="/main.js" defer></script>
+  </head>
+
+  <body>
+    <div class="widget-window">
+      <!-- Drag Handle Titlebar -->
+      <header class="titlebar" id="titlebar" data-tauri-drag-region>
+        <div class="titlebar-title" data-tauri-drag-region>
+          <span class="app-icon">🚨</span>
+          <span class="app-name">Alert Monitor</span>
+          <span id="live-indicator" class="pulse-dot idle" title="Live status"></span>
+        </div>
+        <div class="titlebar-actions">
+          <button id="btn-refresh" class="icon-btn" title="Refresh Now">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 0-7.14l-1.92-1.92"></path>
+            </svg>
+          </button>
+          <button id="btn-config" class="icon-btn" title="Open Config Folder">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Summary Stats & Search -->
+      <section class="controls-section">
+        <div class="stats-bar">
+          <button class="stat-pill stat-firing" id="btn-jump-ongoing" title="Jump to On going active alerts">
+            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+              <span class="stat-label">On going</span>
+              <span class="stat-value" id="stat-firing-count">0</span>
+            </div>
+            <span class="jump-arrow">↓</span>
+          </button>
+          <button class="stat-pill stat-unacked" id="btn-jump-resolved" title="Jump to Closed / Resolved alerts">
+            <div style="display:flex; flex-direction:column; align-items:flex-start;">
+              <span class="stat-label">Resolved</span>
+              <span class="stat-value" id="stat-unacked-count">0</span>
+            </div>
+            <span class="jump-arrow">↓</span>
+          </button>
+        </div>
+
+        <div class="search-box">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search title, host, or source..." />
+        </div>
+      </section>
+
+      <!-- Alert Lists Container -->
+      <main class="content-area" id="content-area">
+        <!-- Error Banner -->
+        <div id="error-container" class="error-container hidden"></div>
+
+        <!-- Active Alerts Section -->
+        <section class="alert-section" id="section-ongoing">
+          <div class="section-header">
+            <span class="section-title">🔥 On going Alerts</span>
+            <span class="badge" id="badge-active-count">0</span>
+          </div>
+          <div id="active-alert-list" class="alert-list">
+            <div class="empty-state">
+              <div class="empty-icon">✅</div>
+              <div class="empty-title">All Systems Normal</div>
+              <div class="empty-desc">No active problems or alerts firing across configured instances.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Horizontal Divider -->
+        <div class="section-divider" id="section-resolved">
+          <span class="divider-line"></span>
+          <span class="divider-label">Closed / Resolved History</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <!-- Closed Unacknowledged Section -->
+        <section class="alert-section">
+          <div class="section-header">
+            <span class="section-title">📜 Closed Alerts</span>
+            <span class="badge badge-unacked" id="badge-unacked-count">0</span>
+          </div>
+          <div id="unacked-alert-list" class="alert-list">
+            <div class="empty-state">
+              <div class="empty-icon">🎉</div>
+              <div class="empty-title">No Closed / Resolved Alerts</div>
+              <div class="empty-desc">No recently resolved alerts recorded.</div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer Info -->
+      <footer class="widget-footer">
+        <span id="last-updated" class="update-time">Loading...</span>
+        <button id="btn-open-yaml" class="footer-link">Edit config.yaml</button>
+      </footer>
+    </div>
+  </body>
+</html>
